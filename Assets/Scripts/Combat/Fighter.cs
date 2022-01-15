@@ -13,17 +13,19 @@ namespace RPG.Combat
         [SerializeField] float timeBetweenAttacks = 1f;
         [SerializeField] float weaponDamage = 10f;
 
-        Transform target;
+        Health target;
         float timeSinceLastAttack = 0;
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
             if (target == null) return;
-            bool isInRange =  Vector3.Distance(transform.position, target.position) < weaponRange;
+            if (target.IsDead()) return;
+
+            bool isInRange =  Vector3.Distance(transform.position, target.transform.position) < weaponRange;
             if(!isInRange)
             {
                
-                GetComponent<Mover>().MoveTo(target.position);
+                GetComponent<Mover>().MoveTo(target.transform.position);
             } else
             {
                 GetComponent<Mover>().Cancel();
@@ -33,9 +35,11 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
-        if (timeSinceLastAttack > timeBetweenAttacks)
+            transform.LookAt(target.transform);
+            if (timeSinceLastAttack > timeBetweenAttacks)
             {
-                // This will trigger the Hit() animation event
+                GetComponent<Animator>().ResetTrigger("stopAttacking");
+                // This will trigger the Hit() animation 
                 GetComponent<Animator>().SetTrigger("attack");
                 timeSinceLastAttack = 0;
             }
@@ -44,18 +48,28 @@ namespace RPG.Combat
         // Animation Event
         void Hit()
         {
-            target.GetComponent<Health>().TakeDamage(weaponDamage);
+            if (target == null) return;
+            target.TakeDamage(weaponDamage);
         }
 
         public void Attack(CombatTarget combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            target = combatTarget.transform;
+            target = combatTarget.GetComponent<Health>();
         }
 
         public void Cancel()
         {
+            GetComponent<Animator>().ResetTrigger("attack");
+            GetComponent<Animator>().SetTrigger("stopAttacking");
             target = null;
+        }
+
+        public bool CanAttack(CombatTarget combatTarget)
+        {
+            if (combatTarget == null) return false;
+            Health targetToTest = combatTarget.GetComponent<Health>();
+            return targetToTest != null && !targetToTest.IsDead();
         }
         
     }

@@ -31,7 +31,6 @@ namespace RPG.Movement
 
         public void MoveToCursor()
         {
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             bool hasHit = Physics.Raycast(ray, out hit);

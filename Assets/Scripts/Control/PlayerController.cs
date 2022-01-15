@@ -28,7 +28,7 @@ namespace RPG.Control
             foreach (RaycastHit item in hits)
             {
                 CombatTarget target = item.transform.GetComponent<CombatTarget>();
-                if (target == null) continue;
+                if (!GetComponent<Fighter>().CanAttack(target)) continue;
                 if (Input.GetMouseButton(0))
                 {
                     GetComponent<Fighter>().Attack(target);
@@ -59,6 +59,11 @@ namespace RPG.Control
         private static Ray GetMouseRay()
         {
             return Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
+
+        public Vector3 getPosition()
+        {
+            return transform.position;
         }
     }
 }
