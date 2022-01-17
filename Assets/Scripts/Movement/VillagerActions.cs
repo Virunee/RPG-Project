@@ -7,6 +7,8 @@ public class VillagerActions : MonoBehaviour
 {
     [SerializeField] float boundaryDistance = 5f;
     private bool hasBowed = false;
+    float timeSinceLastBow = Mathf.Infinity;
+    float bowDelay = 10f;
 
     private void Update()
     {
@@ -14,6 +16,7 @@ public class VillagerActions : MonoBehaviour
         bool isInRange = Vector3.Distance(transform.position, playerPosition) < boundaryDistance;
         if (!isInRange)
         {
+            timeSinceLastBow += Time.deltaTime;
             hasBowed = false;
             return;
         }
@@ -21,11 +24,12 @@ public class VillagerActions : MonoBehaviour
         if(isInRange)
         {
             transform.LookAt(GameObject.Find("Player").transform);
-            if(!hasBowed)
+            if(!hasBowed && timeSinceLastBow > bowDelay)
             {
                 transform.LookAt(GameObject.Find("Player").transform);
                 GetComponent<Animator>().SetTrigger("bow");
                 hasBowed = true;
+                timeSinceLastBow = 0;
             }
         }
     }

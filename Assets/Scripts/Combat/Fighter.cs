@@ -14,7 +14,7 @@ namespace RPG.Combat
         [SerializeField] float weaponDamage = 10f;
 
         Health target;
-        float timeSinceLastAttack = 0;
+        float timeSinceLastAttack = Mathf.Infinity;
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
@@ -65,7 +65,7 @@ namespace RPG.Combat
             target = null;
         }
 
-        public bool CanAttack(CombatTarget combatTarget)
+        public bool CanAttack(GameObject combatTarget)
         {
             if (combatTarget == null) return false;
             Health targetToTest = combatTarget.GetComponent<Health>();
