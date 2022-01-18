@@ -52,7 +52,7 @@ namespace RPG.Combat
             target.TakeDamage(weaponDamage);
         }
 
-        public void Attack(CombatTarget combatTarget)
+        public void Attack(GameObject combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
             target = combatTarget.GetComponent<Health>();
