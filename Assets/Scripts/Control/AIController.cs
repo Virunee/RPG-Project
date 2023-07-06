@@ -37,7 +37,7 @@ namespace RPG.Control
             player = GameObject.FindWithTag("Player");
             health = GetComponent<Health>();
             mover = GetComponent<Mover>();
-            patrolPath = GetComponent<PatrolPath>();
+            // patrolPath = GetComponent<PatrolPath>();
             timeAtCurrentWaypoint = Mathf.Infinity;
 
             guardPosition = gameObject.transform.position;
